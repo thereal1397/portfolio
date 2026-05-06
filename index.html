@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dariel Cuda — Legal Assistant & Operations Professional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #c8a96e;
+    --accent2: #e8c98a;
+    --text: #f0ede8;
+    --muted: #7a7880;
+    --dim: #3a3845;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; letter-spacing: 0.12em;
+    color: var(--accent); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; letter-spacing: 0.08em; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em;
+    color: var(--accent); border: 1px solid var(--accent);
+    padding: 4px 10px; border-radius: 2px;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,169,110,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(200,169,110,0.03) 0%, transparent 70%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 50% 60% at 30% 50%, rgba(200,169,110,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 40% at 80% 20%, rgba(200,169,110,0.03) 0%, transparent 60%);
+  }
+  .hero-layout {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    max-width: 100%;
+    margin: 0 -48px;
+  }
+  .hero-content {
+    padding: 160px 64px 80px 64px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-photo-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .hero-photo-wrap::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 2;
+    background:
+      linear-gradient(to right, var(--bg) 0%, rgba(10,10,15,0.4) 25%, transparent 55%),
+      linear-gradient(to top, var(--bg) 0%, transparent 30%);
+  }
+  .hero-photo-wrap::after {
+    content: '';
+    position: absolute; top: 0; right: 0; z-index: 2;
+    width: 3px; height: 55%;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .hero-photo {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block;
+    filter: contrast(1.05) brightness(1.02) saturate(1.1);
+    mix-blend-mode: normal;
+  }
+  .hero-photo-tint { display: none; }
+  .hero-photo-overlay { display: none; }
+  .hero-photo-frame {
+    display: block;
+    position: absolute; z-index: 3;
+    top: 32px; right: 28px;
+    width: 60px; height: 60px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .hero-photo-frame2 {
+    position: absolute; z-index: 3;
+    bottom: 80px; left: 28px;
+    width: 40px; height: 40px;
+    border-bottom: 1px solid var(--accent);
+    border-left: 1px solid var(--accent);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .hero-photo-tag {
+    position: absolute; bottom: 32px; left: 0; right: 0; z-index: 4;
+    padding: 0 32px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .photo-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.14em; color: var(--accent);
+    background: rgba(10,10,15,0.75);
+    padding: 7px 14px; border-radius: 2px;
+    border: 1px solid rgba(200,169,110,0.25);
+    backdrop-filter: blur(12px);
+    width: fit-content;
+  }
+  .photo-badge-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .photo-badge.secondary {
+    color: var(--muted); font-size: 9px;
+    border-color: rgba(255,255,255,0.08);
+  }
+  .hero-photo-scanline {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    );
+  }
+  @media (max-width: 900px) {
+    .hero-layout { grid-template-columns: 1fr; margin: 0 -20px; }
+    .hero-photo-wrap { height: 65vw; min-height: 260px; max-height: 380px; }
+    .hero-content { padding: 40px 20px 60px; }
+    .hero-photo-frame2 { display: none; }
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--accent);
+  }
+  h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+  h1.hero-title em {
+    font-style: normal; color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 18px; font-weight: 300;
+    color: var(--muted); max-width: 560px;
+    line-height: 1.65; margin-bottom: 44px;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #0a0a0f;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 14px 28px; border-radius: 3px;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--dim); color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 14px 28px; border-radius: 3px;
+    text-decoration: none; transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 72px;
+    padding-top: 40px; border-top: 1px solid var(--border);
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700; color: var(--accent);
+  }
+  .stat-label { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); margin-top: 2px; }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 48px; }
+  .section-tag {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  h2.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700; line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    color: var(--muted); font-size: 16px;
+    max-width: 520px; line-height: 1.65;
+    margin-bottom: 56px;
+  }
+
+  /* ── VALUE PROP ── */
+  #value { background: var(--surface); }
+  .value-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  .value-col { padding: 44px; }
+  .value-col:first-child { border-right: 1px solid var(--border); }
+  .value-col-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .value-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .value-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .value-icon { font-size: 18px; margin-top: 2px; flex-shrink: 0; }
+  .value-text strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .value-text span { font-size: 13px; color: var(--muted); }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--bg); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; background: var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .skill-card {
+    background: var(--surface); padding: 36px 32px;
+    transition: background 0.2s;
+  }
+  .skill-card:hover { background: var(--surface2); }
+  .skill-card-icon { font-size: 28px; margin-bottom: 18px; }
+  .skill-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 6px; color: var(--accent);
+  }
+  .skill-card-sub {
+    font-size: 11px; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .skill-list { list-style: none; }
+  .skill-list li {
+    font-size: 14px; color: var(--text);
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .skill-list li:last-child { border-bottom: none; }
+  .skill-list li::before {
+    content: ''; display: block;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
+  }
+
+  /* ── TOOLS ── */
+  #tools { background: var(--surface); }
+  .tools-primary {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; background: var(--border);
+    border-radius: 4px; overflow: hidden;
+    margin-bottom: 2px;
+  }
+  .tools-secondary {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 2px; background: var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  .tool-card {
+    background: var(--surface2); padding: 28px 24px;
+    text-align: center; transition: background 0.2s;
+  }
+  .tool-card:hover { background: #1c1c26; }
+  .tool-card.highlight { background: rgba(200,169,110,0.07); }
+  .tool-emoji { font-size: 26px; margin-bottom: 10px; display: block; }
+  .tool-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .tool-cat {
+    font-size: 10px; letter-spacing: 0.12em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .tools-divider {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.14em; color: var(--muted);
+    text-transform: uppercase; text-align: center;
+    padding: 14px 0; margin: 20px 0 4px;
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--bg); }
+  .timeline { position: relative; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px; background: var(--dim);
+  }
+  .tl-item {
+    position: relative; padding-left: 36px;
+    margin-bottom: 0;
+  }
+  .tl-item + .tl-item { border-top: 1px solid var(--border); }
+  .tl-dot {
+    position: absolute; left: -5px; top: 36px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--dim); border: 2px solid var(--bg);
+    transition: background 0.2s;
+  }
+  .tl-item:hover .tl-dot { background: var(--accent); }
+  .tl-inner {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 32px; padding: 36px 0;
+    align-items: start;
+  }
+  .tl-meta { }
+  .tl-date {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .tl-company {
+    font-size: 13px; color: var(--muted);
+    font-weight: 500;
+  }
+  .tl-badge {
+    display: inline-block; margin-top: 10px;
+    font-size: 10px; letter-spacing: 0.1em;
+    padding: 3px 8px; border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+  }
+  .badge-legal { background: rgba(200,169,110,0.15); color: var(--accent); }
+  .badge-eng { background: rgba(100,150,200,0.12); color: #88b4d8; }
+  .tl-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    margin-bottom: 16px; line-height: 1.2;
+  }
+  .tl-results { list-style: none; }
+  .tl-results li {
+    font-size: 14px; color: var(--text);
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .tl-results li:last-child { border-bottom: none; }
+  .tl-results li .arrow {
+    color: var(--accent); font-size: 12px;
+    margin-top: 3px; flex-shrink: 0;
+  }
+
+  /* ── WHY HIRE ── */
+  #why { background: var(--surface); }
+  .why-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 2px; background: var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  .why-card {
+    background: var(--surface2); padding: 36px 32px;
+  }
+  .why-num {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; color: var(--dim);
+    margin-bottom: 16px;
+  }
+  .why-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    margin-bottom: 10px; color: var(--accent);
+  }
+  .why-body { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--bg);
+    padding: 100px 48px;
+    text-align: center;
+  }
+  .contact-inner {
+    max-width: 640px; margin: 0 auto;
+  }
+  .contact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900; line-height: 1.0;
+    margin-bottom: 24px;
+  }
+  .contact-title em { font-style: normal; color: var(--accent); }
+  .contact-desc {
+    color: var(--muted); font-size: 16px; line-height: 1.65;
+    margin-bottom: 48px;
+  }
+  .contact-links {
+    display: flex; justify-content: center;
+    gap: 14px; flex-wrap: wrap; margin-bottom: 48px;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--dim); border-radius: 3px;
+    padding: 14px 24px; text-decoration: none;
+    color: var(--text); font-size: 14px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .contact-item:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-timezone {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    letter-spacing: 0.1em; color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    letter-spacing: 0.1em; color: var(--muted);
+  }
+  .footer-right { font-size: 12px; color: var(--dim); }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    section, #hero, #contact { padding: 72px 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; }
+    .value-grid, .skills-grid, .why-grid { grid-template-columns: 1fr; }
+    .value-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .tl-inner { grid-template-columns: 1fr; gap: 12px; }
+    .tools-primary { grid-template-columns: repeat(2, 1fr); }
+    .tools-secondary { grid-template-columns: repeat(3, 1fr); }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">DC / LEGAL</a>
+  <ul class="nav-links">
+    <li><a href="#value">Value</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#why">Why Me</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <span class="nav-badge">● AVAILABLE NOW</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-layout">
+  <div class="hero-content">
+    <div class="hero-tag">Legal Assistant · Virtual Operations · US-Market Ready</div>
+    <h1 class="hero-title">
+      Dariel<br/>
+      <em>Cuda.</em>
+    </h1>
+    <p class="hero-sub">
+      I help law firms stay organized, meet deadlines, and deliver exceptional client experiences—without constant supervision. Three U.S. firms. Three years. Zero dropped balls.
+    </p>
+    <div class="hero-ctas">
+      <a href="#experience" class="btn-primary">View Experience →</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">3+</div>
+        <div class="stat-label">YRS LEGAL VA EXP</div>
+      </div>
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">U.S. LAW FIRMS</div>
+      </div>
+      <div>
+        <div class="stat-num">6+</div>
+        <div class="stat-label">YRS TOTAL EXP</div>
+      </div>
+
+    </div>
+  </div><!-- /hero-content -->
+
+  <div class="hero-photo-wrap">
+    <img
+      src="https://thereal1397.github.io/darielcudaportfolio.github.io/dariel-photo.jpg"
+      alt="Dariel Cuda"
+      class="hero-photo"
+    />
+    <div class="hero-photo-tint"></div>
+    <div class="hero-photo-scanline"></div>
+    <div class="hero-photo-overlay"></div>
+    <div class="hero-photo-frame"></div>
+    <div class="hero-photo-frame2"></div>
+    <div class="hero-photo-tag">
+      <div class="photo-badge">
+        <div class="photo-badge-dot"></div>
+        AVAILABLE FOR HIRE
+      </div>
+      <div class="photo-badge secondary">
+        📍 CEBU, PH · OPEN TO REMOTE
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /hero-layout -->
+</section>
+
+<!-- VALUE PROP -->
+<section id="value">
+  <div class="section-tag">01 / Value Proposition</div>
+  <h2 class="section-title">What I Fix.<br/>What I Deliver.</h2>
+  <p class="section-desc">Most legal VAs handle tasks. I build systems. Here's the before-and-after your firm will feel.</p>
+  <div class="value-grid fade-in">
+    <div class="value-col">
+      <div class="value-col-label">❌ Problems I Solve</div>
+      <div class="value-item">
+        <div class="value-icon">🗂️</div>
+        <div class="value-text">
+          <strong>Disorganized Case Files</strong>
+          <span>Buried documents, missing records, no system for finding anything fast.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">⏰</div>
+        <div class="value-text">
+          <strong>Missed Deadlines & Follow-Ups</strong>
+          <span>Court dates, filing windows, and client callbacks falling through the cracks.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">📞</div>
+        <div class="value-text">
+          <strong>Poor Client Communication</strong>
+          <span>Clients left waiting, case updates delayed, trust eroding quietly.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">📝</div>
+        <div class="value-text">
+          <strong>Document Bottlenecks</strong>
+          <span>Attorneys spending billable hours on drafting, filing, and admin work.</span>
+        </div>
+      </div>
+    </div>
+    <div class="value-col">
+      <div class="value-col-label">✅ Results I Deliver</div>
+      <div class="value-item">
+        <div class="value-icon">📁</div>
+        <div class="value-text">
+          <strong>Organized, Searchable Systems</strong>
+          <span>Every file labeled, tagged, and accessible within 30 seconds.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">✅</div>
+        <div class="value-text">
+          <strong>Zero Missed Deadlines</strong>
+          <span>Calendar management, reminders, and proactive follow-through built in.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🤝</div>
+        <div class="value-text">
+          <strong>Proactive Client Updates</strong>
+          <span>Clients know what's happening before they have to ask—reducing your inbox.</span>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">⚡</div>
+        <div class="value-text">
+          <strong>Faster Attorney Workflows</strong>
+          <span>Drafts ready, filings queued, CRM updated—so attorneys stay in their zone.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-tag">02 / Core Skills</div>
+  <h2 class="section-title">Where I Excel.</h2>
+  <p class="section-desc">Three focused domains—each built from real experience, not just resume keywords.</p>
+  <div class="skills-grid fade-in">
+    <div class="skill-card">
+      <div class="skill-card-icon">⚖️</div>
+      <div class="skill-card-title">Legal Operations</div>
+      <div class="skill-card-sub">Primary Expertise</div>
+      <ul class="skill-list">
+        <li>Case management & file organization</li>
+        <li>Legal document drafting & review</li>
+        <li>Court filings via Odyssey E-Filing</li>
+        <li>CRM management (Clio, Filevine)</li>
+        <li>Medical records & billing summaries</li>
+        <li>Client intake & communication</li>
+        <li>Insurance correspondence</li>
+        <li>Dismissal & motion preparation</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🏗️</div>
+      <div class="skill-card-title">Construction Support</div>
+      <div class="skill-card-sub">Engineering Background</div>
+      <ul class="skill-list">
+        <li>BOQ preparation & cost estimation</li>
+        <li>Permit coordination & compliance</li>
+        <li>AutoCAD drafting</li>
+        <li>Infrastructure documentation</li>
+        <li>NSCP-compliant structural design</li>
+        <li>Multi-stakeholder coordination</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🖥️</div>
+      <div class="skill-card-title">Admin & Operations</div>
+      <div class="skill-card-sub">Support Infrastructure</div>
+      <ul class="skill-list">
+        <li>Calendar & deadline management</li>
+        <li>Client communication protocols</li>
+        <li>Data entry & records accuracy</li>
+        <li>Workflow tracking systems</li>
+        <li>Escalation & resolution handling</li>
+        <li>Scheduling & coordination</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-tag">03 / Tools & Systems</div>
+  <h2 class="section-title">Ready to Deploy.</h2>
+  <p class="section-desc">The software your firm already uses—I'm already trained on it.</p>
+
+  <div class="tools-divider">⚖️ Legal Platforms</div>
+  <div class="tools-primary fade-in">
+    <div class="tool-card highlight">
+      <span class="tool-emoji">⚖️</span>
+      <div class="tool-name">Clio</div>
+      <div class="tool-cat">Case Management</div>
+    </div>
+    <div class="tool-card highlight">
+      <span class="tool-emoji">📁</span>
+      <div class="tool-name">Filevine</div>
+      <div class="tool-cat">Case Management</div>
+    </div>
+    <div class="tool-card highlight">
+      <span class="tool-emoji">🗂️</span>
+      <div class="tool-name">Odyssey</div>
+      <div class="tool-cat">E-Filing System</div>
+    </div>
+    <div class="tool-card highlight">
+      <span class="tool-emoji">☁️</span>
+      <div class="tool-name">Salesforce</div>
+      <div class="tool-cat">CRM</div>
+    </div>
+  </div>
+
+  <div class="tools-divider">🖥️ Productivity & Operations</div>
+  <div class="tools-secondary fade-in">
+    <div class="tool-card">
+      <span class="tool-emoji">📧</span>
+      <div class="tool-name">G-Suite</div>
+      <div class="tool-cat">Communication</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-emoji">📊</span>
+      <div class="tool-name">Excel</div>
+      <div class="tool-cat">Data & Tracking</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-emoji">💼</span>
+      <div class="tool-name">MS Office</div>
+      <div class="tool-cat">Documents</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-emoji">📐</span>
+      <div class="tool-name">AutoCAD</div>
+      <div class="tool-cat">Engineering</div>
+    </div>
+    <div class="tool-card">
+      <span class="tool-emoji">🏗️</span>
+      <div class="tool-name">SketchUp</div>
+      <div class="tool-cat">Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-tag">04 / Experience</div>
+  <h2 class="section-title">The Track Record.</h2>
+  <p class="section-desc">Every role, every result. Read this and ask yourself: do I need someone exactly like this?</p>
+
+  <div class="timeline">
+
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-inner">
+        <div class="tl-meta">
+          <div class="tl-date">NOV 2024 — FEB 2026</div>
+          <div class="tl-company">Law Offices of Jacob Emrani · Remote, US</div>
+          <div class="tl-badge badge-legal">Legal / VIP Ops</div>
+        </div>
+        <div>
+          <div class="tl-role">VIP Client Care Specialist</div>
+          <ul class="tl-results">
+            <li><span class="arrow">→</span>Managed high-priority client accounts, ensuring seamless communication and exceptional service delivery.</li>
+            <li><span class="arrow">→</span>Maintained comprehensive records of client interactions and case updates within the firm's CRM.</li>
+            <li><span class="arrow">→</span>Optimized workflow tracking systems to ensure continuity and efficiency in client case management.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-inner">
+        <div class="tl-meta">
+          <div class="tl-date">APR 2024 — NOV 2024</div>
+          <div class="tl-company">Labovick Law Group · Remote, US</div>
+          <div class="tl-badge badge-legal">Legal Assistant</div>
+        </div>
+        <div>
+          <div class="tl-role">Legal Assistant</div>
+          <ul class="tl-results">
+            <li><span class="arrow">→</span>Drafted and prepared legal documents, including filings through the Odyssey E-filing system.</li>
+            <li><span class="arrow">→</span>Maintained highly organized digital case files and documentation for easy retrieval and compliance.</li>
+            <li><span class="arrow">→</span>Coordinated effectively between attorneys, case managers, and clients to facilitate case progression.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-inner">
+        <div class="tl-meta">
+          <div class="tl-date">FEB 2023 — APR 2024</div>
+          <div class="tl-company">Saeedian Law · Remote, US</div>
+          <div class="tl-badge badge-legal">Legal / Medical</div>
+        </div>
+        <div>
+          <div class="tl-role">Medical Records & Billing Assistant</div>
+          <ul class="tl-results">
+            <li><span class="arrow">→</span>Prepared detailed medical summaries and managed sensitive patient data with high accuracy.</li>
+            <li><span class="arrow">→</span>Drafted legal correspondence and insurance-related documentation.</li>
+            <li><span class="arrow">→</span>Ensured precision in billing processes and records management to support legal claims.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-inner">
+        <div class="tl-meta">
+          <div class="tl-date">JUN 2021 — FEB 2023</div>
+          <div class="tl-company">Municipal Planning & Development Office · Cebu, PH</div>
+          <div class="tl-badge badge-eng">Civil Engineering</div>
+        </div>
+        <div>
+          <div class="tl-role">Office Civil Engineer</div>
+          <ul class="tl-results">
+            <li><span class="arrow">→</span>Prepared detailed cost estimates, Bills of Quantities (BOQs), and comprehensive project plans.</li>
+            <li><span class="arrow">→</span>Developed a custom Excel-based structural estimation tool compliant with NSCP standards.</li>
+            <li><span class="arrow">→</span>Coordinated various infrastructure projects and managed all associated technical documentation.</li>
+            <li><span class="arrow">→</span>Provided critical support for permitting and regulatory compliance processes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item fade-in">
+      <div class="tl-dot"></div>
+      <div class="tl-inner">
+        <div class="tl-meta">
+          <div class="tl-date">FEB 2019 — MAY 2021</div>
+          <div class="tl-company">Domaintricks Corporation · Cebu, PH</div>
+          <div class="tl-badge badge-eng">Site Engineering</div>
+        </div>
+        <div>
+          <div class="tl-role">Site Acquisition Engineer</div>
+          <ul class="tl-results">
+            <li><span class="arrow">→</span>Coordinated permits, site documentation, and regulatory approvals across multiple project sites.</li>
+            <li><span class="arrow">→</span>Conducted site analysis and managed multi-stakeholder project coordination.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+</section>
+
+<!-- WHY HIRE ME -->
+<section id="why">
+  <div class="section-tag">05 / Why Hire Me</div>
+  <h2 class="section-title">What Sets Me Apart.</h2>
+  <p class="section-desc">Any VA can follow instructions. I anticipate what's next and take ownership of outcomes.</p>
+
+  <div class="why-grid fade-in">
+    <div class="why-card">
+      <div class="why-num">01</div>
+      <div class="why-head">Minimal Supervision Required</div>
+      <div class="why-body">After 3+ years supporting U.S. law firms remotely, I know how to operate independently. I don't wait to be told—I identify what needs doing and do it. Your bottleneck is not my learning curve.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">02</div>
+      <div class="why-head">Legal-Specific Expertise</div>
+      <div class="why-body">I've worked in personal injury, VIP client care, and medical/billing environments. I understand legal terminology, filing protocols, and client sensitivity. This isn't my first legal role—it's my career.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">03</div>
+      <div class="why-head">Proven with U.S. Clients</div>
+      <div class="why-body">Three U.S. law firms. EST/PST availability. I understand American legal standards, communication expectations, and professional culture. There's no adjustment period—I'm already calibrated.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">04</div>
+      <div class="why-head">Strong Attention to Detail</div>
+      <div class="why-body">Legal work has zero tolerance for errors. From medical record summaries to e-filed documents, I deliver accurate, clean, review-ready work the first time—not after multiple rounds of corrections.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">05</div>
+      <div class="why-head">Tech-Savvy & Systems-Minded</div>
+      <div class="why-body">Clio, Filevine, Odyssey, Salesforce, G-Suite—I'm not learning your tools from scratch. I also build systems: organized file structures, workflow trackers, and documentation that make your entire team more efficient.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">06</div>
+      <div class="why-head">Engineering Precision Meets Legal Operations</div>
+      <div class="why-body">A licensed civil engineer who moved into legal VA work—I bring structured, analytical thinking to every task. Deadlines are my engineering specs. Accuracy is my building code. Chaos is just a problem waiting to be systematized.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag" style="text-align:center;display:block;">06 / Contact</div>
+    <h2 class="contact-title">Let's <em>Work</em><br/>Together.</h2>
+    <p class="contact-desc">
+      Available for full-time or part-time remote legal assistant roles with U.S. law firms. Based in Cebu, Philippines. Aligned with EST/PST. Ready to start immediately.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:darielcuda@gmail.com" class="contact-item">
+        📧 darielcuda@gmail.com
+      </a>
+      <a href="tel:+639153679244" class="contact-item">
+        📱 +63 915 367 9244
+      </a>
+      <a href="https://wa.me/639153679244" class="contact-item" target="_blank">
+        💬 WhatsApp
+      </a>
+    </div>
+    <div class="contact-timezone">📍 Cebu, Philippines · Open to Remote</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">[DC] DARIEL CUDA · LEGAL ASSISTANT · PORTFOLIO 2026</div>
+  <div class="footer-right">Available for U.S. Remote Roles</div>
+</footer>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
